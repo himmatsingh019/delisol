@@ -1,3 +1,4 @@
+import 'package:delisol/ui/screens/register.dart';
 import 'package:delisol/ui/theme/app_colors.dart';
 import 'package:delisol/ui/widgets/custom_button.dart';
 import 'package:delisol/ui/widgets/custom_textfield.dart';
@@ -80,7 +81,7 @@ class LoginScreen extends StatelessWidget {
                         child: Text(
                           'Recover Password',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: AppColors.grey,
                             fontSize: 12,
                           ),
                         ),
@@ -92,6 +93,9 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         Text('Don\'t have an account?'),
                         GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, RegisterScreen.route);
+                          },
                           child: Text(
                             ' Sign up',
                             style: TextStyle(

@@ -37,7 +37,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 },
                 child: Icon(
                   visiblePassword ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.grey,
+                  color: AppColors.grey,
                 ),
               )
             : null,
@@ -52,17 +52,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
         contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         label: Text(widget.hintText),
         labelStyle: TextStyle(
-          color: Colors.grey,
+          color: AppColors.grey,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
           borderSide: BorderSide(
-            color: Colors.grey,
+            color: AppColors.grey,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.grey,
+            color: AppColors.grey,
           ),
         ),
       ),

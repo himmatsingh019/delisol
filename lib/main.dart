@@ -1,6 +1,7 @@
 import 'package:delisol/core/routes.dart';
 import 'package:delisol/ui/screens/home.dart';
 import 'package:delisol/ui/screens/login.dart';
+import 'package:delisol/ui/screens/register.dart';
 import 'package:delisol/ui/screens/splash.dart';
 import 'package:delisol/ui/theme/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: AppRoutes.onGenerateRoute,
-      initialRoute: LoginScreen.route,
+      initialRoute: HomeScreen.route,
       theme: AppTheme.theme,
     );
   }
