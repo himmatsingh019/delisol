@@ -3,6 +3,7 @@ import 'package:delisol/ui/theme/app_colors.dart';
 import 'package:delisol/ui/widgets/read_only_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -66,20 +67,39 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(height: 14),
                           Consumer(builder: (context, ref, _) {
                             return ReadOnlyTextField(
-                              value: ref.read(AuthController.provider)!.firstName,
+                              value: '${ref.read(AuthController.provider)!.firstName} ${ref.read(AuthController.provider)!.lastName}',
                               hint: 'Name',
+                              isName: true,
                             );
                           }),
                           SizedBox(height: 14),
-                          ReadOnlyTextField(
-                            value: 'ABC chowkdi',
-                            hint: 'Address',
-                          ),
+                          Consumer(builder: (context, ref, _) {
+                            return ReadOnlyTextField(
+                              value: 'ABC chowkdi',
+                              isMap: true,
+                              isName: false,
+                              callback: () {
+                                launchMap(
+                                  lat: ref.read(AuthController.provider)?.location?.latitude ?? 0.0,
+                                  long: ref.read(AuthController.provider)?.location?.longitude ?? 0.0,
+                                );
+                              },
+                              hint: 'Address',
+                            );
+                          }),
                           SizedBox(height: 14),
-                          ReadOnlyTextField(
-                            value: '12345678',
-                            hint: 'Mobile No',
-                          ),
+                          Consumer(builder: (context, ref, _) {
+                            return ReadOnlyTextField(
+                              isMap: false,
+                              isName: false,
+                              value: ref.read(AuthController.provider)!.phoneNumber,
+                              hint: 'Mobile No',
+                              callback: () {
+                                String number = ref.read(AuthController.provider)!.phoneNumber;
+                                launch('tel://+91 $number}');
+                              },
+                            );
+                          }),
                           SizedBox(height: 16),
                           Row(
                             children: [
@@ -192,5 +212,9 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  launchMap({required double lat, required double long}) async {
+    launch('https://www.google.com/maps/@$long,$lat,14z');
   }
 }
