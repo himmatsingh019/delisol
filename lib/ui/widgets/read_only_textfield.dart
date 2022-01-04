@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 class ReadOnlyTextField extends StatelessWidget {
   const ReadOnlyTextField({
     Key? key,
-    required this.controller,
     required this.hint,
     this.isMap = false,
     this.isNumber = false,
+    required this.value,
   }) : super(key: key);
 
   final String hint;
   final bool isMap;
   final bool isNumber;
-  final TextEditingController controller;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller..text,
+    return TextFormField(
+      initialValue: value,
       enabled: false,
       decoration: InputDecoration(
         suffixIcon: GestureDetector(

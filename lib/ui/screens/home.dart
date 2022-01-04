@@ -1,19 +1,30 @@
+import 'package:delisol/controllers/auth_controller.dart';
 import 'package:delisol/ui/theme/app_colors.dart';
 import 'package:delisol/ui/widgets/read_only_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   static const String route = '/home';
 
-  final TextEditingController nameController = TextEditingController(text: 'Suraj Boniwal');
-  final TextEditingController contactController = TextEditingController(text: '9974849404');
-  final TextEditingController addressController = TextEditingController(text: 'Jaldhara Chowkdi, Ankleshwar');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Consumer(
+            builder: (context, ref, _) {
+              return IconButton(
+                onPressed: () {
+                  ref.read(AuthController.provider.notifier).logoutUser();
+                },
+                icon: Icon(Icons.logout_outlined),
+                color: Colors.black,
+              );
+            },
+          ),
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -53,18 +64,20 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 14),
-                          ReadOnlyTextField(
-                            controller: nameController,
-                            hint: 'Name',
-                          ),
+                          Consumer(builder: (context, ref, _) {
+                            return ReadOnlyTextField(
+                              value: ref.read(AuthController.provider)!.firstName,
+                              hint: 'Name',
+                            );
+                          }),
                           SizedBox(height: 14),
                           ReadOnlyTextField(
-                            controller: contactController,
+                            value: 'ABC chowkdi',
                             hint: 'Address',
                           ),
                           SizedBox(height: 14),
                           ReadOnlyTextField(
-                            controller: addressController,
+                            value: '12345678',
                             hint: 'Mobile No',
                           ),
                           SizedBox(height: 16),

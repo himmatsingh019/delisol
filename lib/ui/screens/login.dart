@@ -1,8 +1,10 @@
+import 'package:delisol/controllers/auth_controller.dart';
 import 'package:delisol/ui/screens/register.dart';
 import 'package:delisol/ui/theme/app_colors.dart';
 import 'package:delisol/ui/widgets/custom_button.dart';
 import 'package:delisol/ui/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -106,7 +108,20 @@ class LoginScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 8),
-                    CustomButton(),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final loading = ref.watch(AuthLoadingController.provider);
+                        return CustomButton(
+                          loading: loading,
+                          onTap: () {
+                            ref.read(AuthController.provider.notifier).login(
+                                  emailController.text,
+                                  passwordController.text,
+                                );
+                          },
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
