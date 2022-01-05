@@ -116,6 +116,7 @@ class AuthController extends StateNotifier<UserModel?> {
     LocalStorage.instance.setString('token', response.data.token);
     LocalStorage.init();
     DioClient.refreshToken();
+    read(DeliveryController.provider.notifier).getDeliveryDetails();
     state = response.data.user;
 
     navigationKey.currentState!.pushNamedAndRemoveUntil(
