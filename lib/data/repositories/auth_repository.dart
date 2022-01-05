@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:delisol/core/services/dio_client.dart';
 import 'package:delisol/data/models/custom_response.dart';
+import 'package:delisol/data/models/delivery_model.dart';
 import 'package:delisol/data/models/login_response.dart';
 import 'package:delisol/data/models/user_model.dart';
 import 'package:dio/dio.dart';
@@ -18,6 +21,19 @@ class AuthRepository {
       return CustomResponse.error('API Error');
     } catch (e) {
       return CustomResponse.error('Something went wrong.');
+    }
+  }
+
+  Future<CustomResponse<List<DeliveryModel>>> getDeliveryDetails() async {
+    try {
+      Response response = await DioClient.dio.get(
+        '/users/getDeliveryAddress',
+      );
+      return CustomResponse.completed((response.data as List).map((e) => DeliveryModel.fromMap(e)).toList());
+    } on DioError catch (e) {
+      return CustomResponse.error('API Error');
+    } catch (e) {
+      return CustomResponse.error('Something went wrong. 2');
     }
   }
 
@@ -66,6 +82,39 @@ class AuthRepository {
       return CustomResponse.error('API Error');
     } catch (e) {
       return CustomResponse.error('Something went wrong.');
+    }
+  }
+
+  Future<CustomResponse<bool>> sendNotificationToken(String token, String userID) async {
+    try {
+      Response response = await DioClient.dio.put(
+        '/users/notificationToken',
+        data: {
+          "token": token,
+          "user_id": userID,
+        },
+      );
+      return CustomResponse.completed(true);
+    } on DioError catch (err) {
+      return CustomResponse.error('API Error');
+    } catch (e) {
+      return CustomResponse.error('Something went wrong');
+    }
+  }
+
+  Future<CustomResponse<bool>> sendNotificaiton({required String userID}) async {
+    try {
+      Response response = await DioClient.dio.post(
+        '/users/sendNotification',
+        data: {
+          'user_id': userID,
+        },
+      );
+      return CustomResponse.completed(true);
+    } on DioError catch (err) {
+      return CustomResponse.error('API Error');
+    } catch (e) {
+      return CustomResponse.error('Something went wrong');
     }
   }
 }

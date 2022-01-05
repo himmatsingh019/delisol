@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "365602666583",
+    "project_id": "delisol-c9da2",
+    "storage_bucket": "delisol-c9da2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365602666583:android:b4c6796244e0e8f2114b12",
+        "android_client_info": {
+          "package_name": "com.example.delisol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "365602666583-2ic8pnjqmnu09c0rsqep6k3na56hg2r4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.delisol",
+            "certificate_hash": "f13d5e44827fe3837faa97a5702ac37686017143"
+          }
+        },
+        {
+          "client_id": "365602666583-5a1cduuk37bc85i4pbbn3ru8jtajvgcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQW6yELcTyqI1MhwLTTkieYgvoeFp4gN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "365602666583-5a1cduuk37bc85i4pbbn3ru8jtajvgcv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,7 @@ import 'package:delisol/core/routes/routes.dart';
 import 'package:delisol/core/services/local_storage.dart';
 import 'package:delisol/ui/screens/splash.dart';
 import 'package:delisol/ui/theme/app_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,8 +10,13 @@ final navigationKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await LocalStorage.init();
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(
+    ProviderScope(
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -19,6 +19,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     super.initState();
     if (LocalStorage.preferences.getString('token') != null) {
       ref.read(AuthController.provider.notifier).getUser();
+      ref.read(DeliveryController.provider.notifier).getDeliveryDetails();
       return;
     }
     Future.delayed(

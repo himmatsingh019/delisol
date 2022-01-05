@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:delisol/controllers/auth_controller.dart';
+import 'package:delisol/core/services/local_storage.dart';
 import 'package:delisol/ui/theme/app_colors.dart';
 import 'package:delisol/ui/widgets/read_only_textfield.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -65,74 +69,88 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 14),
-                          Consumer(builder: (context, ref, _) {
-                            return ReadOnlyTextField(
-                              value: '${ref.read(AuthController.provider)!.firstName} ${ref.read(AuthController.provider)!.lastName}',
-                              hint: 'Name',
-                              isName: true,
-                            );
-                          }),
+                          Consumer(
+                            builder: (context, ref, _) {
+                              return ReadOnlyTextField(
+                                value: ref.read(DeliveryController.provider)[0].name,
+                                hint: 'Name',
+                                isName: true,
+                              );
+                            },
+                          ),
                           SizedBox(height: 14),
-                          Consumer(builder: (context, ref, _) {
-                            return ReadOnlyTextField(
-                              value: 'ABC chowkdi',
-                              isMap: true,
-                              isName: false,
-                              callback: () {
-                                launchMap(
-                                  lat: ref.read(AuthController.provider)?.location?.latitude ?? 0.0,
-                                  long: ref.read(AuthController.provider)?.location?.longitude ?? 0.0,
-                                );
-                              },
-                              hint: 'Address',
-                            );
-                          }),
+                          Consumer(
+                            builder: (context, ref, _) {
+                              return ReadOnlyTextField(
+                                value: ref.read(DeliveryController.provider)[0].address,
+                                isMap: true,
+                                isName: false,
+                                callback: () {
+                                  launchMap(
+                                    lat: ref.read(DeliveryController.provider)[0].startLatitude.toString(),
+                                    long: ref.read(DeliveryController.provider)[0].startLongitude.toString(),
+                                  );
+                                },
+                                hint: 'Address',
+                              );
+                            },
+                          ),
                           SizedBox(height: 14),
-                          Consumer(builder: (context, ref, _) {
-                            return ReadOnlyTextField(
-                              isMap: false,
-                              isName: false,
-                              value: ref.read(AuthController.provider)!.phoneNumber,
-                              hint: 'Mobile No',
-                              callback: () {
-                                String number = ref.read(AuthController.provider)!.phoneNumber;
-                                launch('tel://+91 $number}');
-                              },
-                            );
-                          }),
+                          Consumer(
+                            builder: (context, ref, _) {
+                              return ReadOnlyTextField(
+                                isMap: false,
+                                isName: false,
+                                value: ref.read(DeliveryController.provider)[0].mobileNumber,
+                                hint: 'Mobile No',
+                                callback: () {
+                                  String number = ref.read(DeliveryController.provider)[0].mobileNumber;
+                                  launch('tel://+91 $number}');
+                                },
+                              );
+                            },
+                          ),
                           SizedBox(height: 16),
                           Row(
                             children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  'From: Krishna Ojha Ojha Bhavan, Old Civil Line, Bikaner',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                              Consumer(
+                                builder: (context, ref, _) {
+                                  return Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      'From: ${ref.read(DeliveryController.provider)[0].fromName}, ${ref.read(DeliveryController.provider)[0].fromAddress}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                               SizedBox(width: 10),
                               Expanded(
                                 flex: 1,
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryColor,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Status',
-                                        style: TextStyle(
-                                          color: Colors.white,
+                                child: Consumer(builder: (context, ref, _) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ref.read(AuthController.provider.notifier).sendNotification();
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primaryColor,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Status',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
+                                  );
+                                }),
                               ),
                             ],
                           ),
@@ -155,54 +173,59 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         color: Colors.grey[200],
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Tilak Nagar, Bikaner',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Icon(Icons.arrow_downward),
-                                Text(
-                                  'MP Colony, Bikaner',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // SizedBox(width: 10),
-                          Expanded(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: AppColors.primaryColor,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Start',
+                      child: Consumer(builder: (context, ref, _) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    ref.read(DeliveryController.provider)[1].fromAddress,
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                ),
+                                  Icon(Icons.arrow_downward),
+                                  Text(
+                                    ref.read(DeliveryController.provider)[1].address,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                            Expanded(
+                              flex: 1,
+                              child: Consumer(builder: (context, ref, _) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    ref.read(AuthController.provider.notifier).sendNotification();
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Start',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                   ],
                 ),
@@ -214,7 +237,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  launchMap({required double lat, required double long}) async {
+  launchMap({required String lat, required String long}) async {
     launch('https://www.google.com/maps/@$long,$lat,14z');
   }
 }
