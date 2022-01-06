@@ -24,6 +24,25 @@ class AuthRepository {
     }
   }
 
+  Future<CustomResponse<bool>> addCoordinates({required double lat, required double long}) async {
+    try {
+      Response response = await DioClient.dio.post(
+        '/users/addCordinates',
+        data: {
+          "address": {
+            "latitude": lat,
+            "longitude": long,
+          },
+        },
+      );
+      return CustomResponse.completed(true);
+    } on DioError catch (e) {
+      return CustomResponse.error('API Error');
+    } catch (e) {
+      return CustomResponse.error('Something went wrong. 2');
+    }
+  }
+
   Future<CustomResponse<List<DeliveryModel>>> getDeliveryDetails() async {
     try {
       Response response = await DioClient.dio.get(

@@ -3,13 +3,14 @@ import 'package:delisol/core/services/local_storage.dart';
 import 'package:delisol/data/models/custom_response.dart';
 import 'package:delisol/data/models/delivery_model.dart';
 import 'package:delisol/data/models/login_response.dart';
-import 'package:delisol/data/models/user_model.dart';
+import 'package:delisol/data/models/user_model.dart' hide Location;
 import 'package:delisol/data/repositories/auth_repository.dart';
 import 'package:delisol/main.dart';
 import 'package:delisol/ui/screens/home.dart';
 import 'package:delisol/ui/screens/login.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:location/location.dart';
 
 class AuthController extends StateNotifier<UserModel?> {
   static final provider = StateNotifierProvider<AuthController, UserModel?>((ref) => AuthController(ref.read));
@@ -100,6 +101,16 @@ class AuthController extends StateNotifier<UserModel?> {
     );
   }
 
+  Future<void> addCoordinates() async {
+    Location location = new Location();
+    LocationData data = await location.getLocation();
+    CustomResponse<bool> response = await read(AuthRepository.provider).addCoordinates(
+      lat: data.latitude ?? 0.0,
+      long: data.longitude ?? 0.0,
+    );
+    print('location updated');
+  }
+
   Future<void> login(String email, String password) async {
     read(AuthLoadingController.provider.notifier).toggleLoading(true);
     CustomResponse<LoginResponse> response = await read(AuthRepository.provider).login(
@@ -150,11 +161,15 @@ class DeliveryController extends StateNotifier<List<DeliveryModel>> {
   DeliveryController(this.read) : super([]);
   final Reader read;
 
+  bool isError = false;
+
   Future<void> getDeliveryDetails() async {
+    isError = false;
     CustomResponse<List<DeliveryModel>> deliveryResponse = await read(AuthRepository.provider).getDeliveryDetails();
 
     if (deliveryResponse.status == Status.ERROR) {
       print(deliveryResponse.message);
+      isError = true;
       return;
     }
 

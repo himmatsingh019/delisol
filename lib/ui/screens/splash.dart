@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'package:delisol/controllers/auth_controller.dart';
 import 'package:delisol/core/services/local_storage.dart';
-import 'package:delisol/ui/screens/home.dart';
 import 'package:delisol/ui/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,7 +24,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     }
     Future.delayed(
       Duration(seconds: 3),
-      () => Navigator.of(context).pushNamedAndRemoveUntil(LoginScreen.route, (route) => false),
+      () => Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+        LoginScreen.route,
+        (route) => false,
+      ),
     );
   }
 
